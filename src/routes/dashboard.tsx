@@ -33,6 +33,10 @@ import {
   Globe,
   Key,
   RefreshCw,
+  Lock,
+  Shield,
+  LogOut,
+  EyeOff,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -60,7 +64,40 @@ export const Route = createFileRoute('/dashboard')({
 
 type DashboardTab = 'overview' | 'products' | 'orders' | 'customers' | 'settings';
 
-function DashboardPage() {
+export function DashboardPage() {
+  const ADMIN_USER = 'admin1234';
+  const ADMIN_PASS = 'rosimode2026';
+
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      sessionStorage.getItem('roussi_admin_auth') === 'true' ||
+      localStorage.getItem('roussi_admin_auth') === 'true'
+    );
+  });
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (loginUsername.trim() === ADMIN_USER && loginPassword.trim() === ADMIN_PASS) {
+      sessionStorage.setItem('roussi_admin_auth', 'true');
+      localStorage.setItem('roussi_admin_auth', 'true');
+      setIsAuthenticated(true);
+      setLoginError('');
+    } else {
+      setLoginError('اسم المستخدم أو كلمة المرور غير صحيحة!');
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('roussi_admin_auth');
+    localStorage.removeItem('roussi_admin_auth');
+    setIsAuthenticated(false);
+  };
+
   const {
     products,
     addProduct,
@@ -268,9 +305,87 @@ function DashboardPage() {
     }, 1200);
   };
 
-  const toggleSize = (s: string) => {
-    setSelectedSizes((prev) => (prev.includes(s) ? prev.filter((item) => item !== s) : [...prev, s]));
-  };
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#0b0d13] flex items-center justify-center p-4 relative overflow-hidden" dir="rtl">
+        {/* Background neon rays effect */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-emerald-600/5 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="w-full max-w-md bg-[#14171f]/95 border border-zinc-800 rounded-3xl p-8 backdrop-blur-xl shadow-2xl shadow-black/80 relative z-10 animate-in fade-in zoom-in-95 duration-200">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4 text-emerald-400 shadow-lg shadow-emerald-500/10">
+              <Shield size={32} />
+            </div>
+            <div className="text-xs font-black tracking-widest uppercase text-emerald-400 mb-1">ROUSSI MODE</div>
+            <h1 className="text-2xl font-black text-white">لوحة تحكم الإدارة</h1>
+            <p className="text-xs text-zinc-400 mt-2">
+              منطقة مخصصة للإدارة فقط. يرجى إدخال اسم المستخدم وكلمة المرور للمتابعة.
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="mb-6 p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle size={16} className="shrink-0" />
+              <span>{loginError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-zinc-300">اسم المستخدم</Label>
+              <Input
+                type="text"
+                placeholder="أدخل اسم المستخدم"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                required
+                className="bg-zinc-900/80 border-zinc-800 text-white h-11 text-sm focus-visible:ring-emerald-500 font-sans"
+                dir="ltr"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-bold text-zinc-300">كلمة المرور</Label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••••••"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                  className="bg-zinc-900/80 border-zinc-800 text-white h-11 text-sm focus-visible:ring-emerald-500 pl-10 font-sans"
+                  dir="ltr"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full h-11 mt-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+            >
+              <Lock size={16} />
+              <span>تسجيل الدخول</span>
+            </Button>
+          </form>
+
+          <div className="mt-6 pt-6 border-t border-zinc-800/80 text-center">
+            <Link to="/" className="text-xs text-zinc-400 hover:text-white inline-flex items-center gap-1 transition">
+              ← العودة إلى المتجر الرئيسي
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0d0f12] text-zinc-100 flex flex-col md:flex-row" dir="rtl">
@@ -384,6 +499,15 @@ function DashboardPage() {
             </div>
             <ExternalLink size={14} className="text-zinc-500" />
           </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-sm font-medium text-rose-400 hover:text-rose-300 bg-rose-950/20 hover:bg-rose-950/40 border border-rose-900/30 transition"
+          >
+            <div className="flex items-center gap-2">
+              <LogOut size={16} />
+              <span>تسجيل الخروج</span>
+            </div>
+          </button>
           <div className="text-[11px] text-zinc-500 text-center pt-2">
             Roussi Mode · الجزائر 🇩🇿
           </div>
@@ -429,6 +553,15 @@ function DashboardPage() {
                 معاينة المتجر
               </Button>
             </Link>
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="border-rose-900/40 bg-rose-950/20 text-rose-300 hover:bg-rose-900/40 hover:text-white h-11 px-4 rounded-xl flex items-center gap-1.5"
+              title="تسجيل الخروج"
+            >
+              <LogOut size={16} />
+              <span>خروج</span>
+            </Button>
           </div>
         </header>
 
