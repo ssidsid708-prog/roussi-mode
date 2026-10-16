@@ -702,11 +702,12 @@ main { animation:appear .3s ease-out; }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
 
 /* Hide Netlify badge */
+#nl-badge,
 [data-netlify-deploy-id],
 #netlify-badge,
 .netlify-badge,
 a[href*="netlify.com"][style*="position:fixed"],
 a[href*="netlify.com"][style*="position: fixed"],
-div[style*="position:fixed"] a[href*="netlify.com"],
-div[style*="z-index:9999"] { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+div[style*="position:fixed"] a[href*="netlify.com"] { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
+
 

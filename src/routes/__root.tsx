@@ -141,11 +141,13 @@ function RootComponent() {
 
   useEffect(() => {
     const remove = () => {
+      const badge = document.getElementById('nl-badge');
+      if (badge) { badge.remove(); return; }
       document.querySelectorAll(
-        'a[href*="netlify.com"], [id*="netlify"], [class*="netlify"]'
+        '[id*="netlify"], [class*="netlify"], a[href*="netlify.com"]'
       ).forEach((el) => {
         const parent = el.closest('div[style*="position"]') ?? el;
-        parent.remove();
+        (parent as HTMLElement).remove();
       });
     };
     remove();
