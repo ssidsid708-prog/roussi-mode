@@ -121,7 +121,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootLayout() {
   const pathname = useLocation().pathname;
-  const isDashboard = pathname.startsWith('/dashboard');
+  const isDashboard = pathname.startsWith('/dashboard') || pathname.startsWith('/admin');
 
   if (isDashboard) {
     return <Outlet />;
