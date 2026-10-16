@@ -139,6 +139,21 @@ function RootLayout() {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const remove = () => {
+      document.querySelectorAll(
+        'a[href*="netlify.com"], [id*="netlify"], [class*="netlify"]'
+      ).forEach((el) => {
+        const parent = el.closest('div[style*="position"]') ?? el;
+        parent.remove();
+      });
+    };
+    remove();
+    const obs = new MutationObserver(remove);
+    obs.observe(document.body, { childList: true, subtree: true });
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
@@ -148,3 +163,4 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
+
