@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { findProduct, getStoredProducts, saveStoredProducts, defaultProducts, type Product } from './products';
+import { findProduct, getStoredProducts, saveStoredProducts, type Product } from './products';
 import {
   isSupabaseConfigured,
   getSupabase,
@@ -44,92 +44,8 @@ export type DashboardOrder = {
 
 export type Order = { id: string; items: CartItem[]; customer: Record<string, string>; total: number };
 
-const defaultSampleOrders: DashboardOrder[] = [
-  {
-    id: 'RM-782910',
-    items: [
-      {
-        productId: '1',
-        name: 'هودي أسود أوفرسايز',
-        price: 4500,
-        image: defaultProducts[0]?.images[0] || '',
-        size: 'L',
-        color: 'أسود',
-        quantity: 1,
-      },
-    ],
-    customer: {
-      name: 'ياسين بلمهدي',
-      phone: '0550123456',
-      wilaya: '16 — الجزائر',
-      commune: 'باب الزوار',
-      address: 'حي 8 ماي 1945 عمارة 12',
-      notes: 'يرجى الاتصال قبل الوصول بعد العصر',
-    },
-    total: 4500,
-    status: 'جديد',
-    createdAt: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
-  },
-  {
-    id: 'RM-782908',
-    items: [
-      {
-        productId: '3',
-        name: 'جينز سليم فيت داكن',
-        price: 4200,
-        image: defaultProducts[2]?.images[0] || '',
-        size: '42',
-        color: 'أزرق داكن',
-        quantity: 1,
-      },
-      {
-        productId: '6',
-        name: 'تيشيرت أوفرسايز أبيض',
-        price: 2500,
-        image: defaultProducts[5]?.images[0] || '',
-        size: 'XL',
-        color: 'أبيض',
-        quantity: 1,
-      },
-    ],
-    customer: {
-      name: 'أمين رحماني',
-      phone: '0771892341',
-      wilaya: '31 — وهران',
-      commune: 'بئر الجير',
-      address: 'إقامة النخيل عمارة C',
-      notes: '',
-    },
-    total: 6700,
-    status: 'قيد التوصيل',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-  },
-  {
-    id: 'RM-782894',
-    items: [
-      {
-        productId: '5',
-        name: 'بومبر جاكيت زيتي',
-        price: 6200,
-        image: defaultProducts[4]?.images[0] || '',
-        size: 'L',
-        color: 'زيتي',
-        quantity: 1,
-      },
-    ],
-    customer: {
-      name: 'كمال بن عيسى',
-      phone: '0662345678',
-      wilaya: '25 — قسنطينة',
-      commune: 'علي منجلي',
-      address: 'الوحدة الجوارية 07',
-      notes: 'الدفع نقداً عند الاستلام',
-    },
-    total: 6200,
-    status: 'تم التسليم',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
-  },
-];
+// No demo orders — start with an empty list
+const defaultSampleOrders: DashboardOrder[] = [];
 
 type Store = {
   // Cart
@@ -227,15 +143,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const savedOrders = localStorage.getItem('roussi-orders');
       if (savedOrders) {
         const parsed = JSON.parse(savedOrders);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           setOrdersList(parsed);
         } else {
-          setOrdersList(defaultSampleOrders);
-          localStorage.setItem('roussi-orders', JSON.stringify(defaultSampleOrders));
+          setOrdersList([]);
+          localStorage.setItem('roussi-orders', JSON.stringify([]));
         }
       } else {
-        setOrdersList(defaultSampleOrders);
-        localStorage.setItem('roussi-orders', JSON.stringify(defaultSampleOrders));
+        setOrdersList([]);
+        localStorage.setItem('roussi-orders', JSON.stringify([]));
       }
 
       // Check and connect Supabase if credentials exist
