@@ -1,0 +1,1 @@
+import{t as e}from"./dashboard-DqBrznTQ.js";var t=e;export{t as component};

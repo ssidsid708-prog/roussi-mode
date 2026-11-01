@@ -1,9 +1,6 @@
 [build]
-  command = "npm run build"
+  command = "echo 'Using pre-built files'"
   publish = "dist"
-
-[build.environment]
-  NITRO_PRESET = "netlify"
 
 [[redirects]]
   from = "/*"
