@@ -152,6 +152,12 @@ export function DashboardPage() {
   const [isNew, setIsNew] = useState(true);
   const [formSuccess, setFormSuccess] = useState('');
 
+  const toggleSize = (sizeOption: string) => {
+    setSelectedSizes((prev) =>
+      prev.includes(sizeOption) ? prev.filter((s) => s !== sizeOption) : [...prev, sizeOption]
+    );
+  };
+
   // Overview Metrics
   const totalRevenue = useMemo(() => {
     return orders

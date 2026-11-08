@@ -1,0 +1,1 @@
+import{T as e}from"./button-Dc6cdFSt.js";import{n as t,s as n}from"./store-ui-BZ2Zp66I.js";var r=e(),i=()=>(0,r.jsxs)(`main`,{className:`container-store max-w-4xl pb-16`,children:[(0,r.jsx)(n,{title:`سلة التسوق`,description:`اختيارات جميلة. خطوة واحدة تفصلك عنها.`}),(0,r.jsx)(t,{})]});export{i as component};

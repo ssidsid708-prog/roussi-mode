@@ -108,7 +108,7 @@ export async function fetchProductsSupabase(): Promise<Product[] | null> {
       isNew: Boolean(row.is_new),
       isFeatured: Boolean(row.is_featured),
       isPromo: Boolean(row.is_promo),
-      createdAt: row.created_at ? new Date(row.created_at).toISOString().split('T')[0] : '2026-10-01',
+      createdAt: (row.created_at ? new Date(row.created_at).toISOString().split('T')[0] : '2026-10-01') ?? '2026-10-01',
     }));
   } catch (err) {
     console.error('Failed to query products from Supabase:', err);
@@ -121,7 +121,7 @@ export async function insertProductSupabase(product: Product): Promise<boolean> 
   if (!client) return false;
 
   try {
-    const { error } = await client.from('products').insert([
+    const { error } = await (client.from('products') as any).insert([
       {
         id: product.id,
         slug: product.slug,
@@ -160,21 +160,21 @@ export async function updateProductSupabase(id: string, patch: Partial<Product>)
 
   try {
     const payload: Record<string, any> = {};
-    if (patch.name !== undefined) payload.name = patch.name;
-    if (patch.price !== undefined) payload.price = patch.price;
-    if (patch.oldPrice !== undefined) payload.old_price = patch.oldPrice;
-    if (patch.discount !== undefined) payload.discount = patch.discount;
-    if (patch.stock !== undefined) payload.stock = patch.stock;
-    if (patch.images !== undefined) payload.images = patch.images;
-    if (patch.category !== undefined) payload.category = patch.category;
-    if (patch.sizes !== undefined) payload.sizes = patch.sizes;
-    if (patch.colors !== undefined) payload.colors = patch.colors;
-    if (patch.description !== undefined) payload.description = patch.description;
-    if (patch.isNew !== undefined) payload.is_new = patch.isNew;
-    if (patch.isFeatured !== undefined) payload.is_featured = patch.isFeatured;
-    if (patch.isPromo !== undefined) payload.is_promo = patch.isPromo;
+    if (patch.name !== undefined) payload['name'] = patch.name;
+    if (patch.price !== undefined) payload['price'] = patch.price;
+    if (patch.oldPrice !== undefined) payload['old_price'] = patch.oldPrice;
+    if (patch.discount !== undefined) payload['discount'] = patch.discount;
+    if (patch.stock !== undefined) payload['stock'] = patch.stock;
+    if (patch.images !== undefined) payload['images'] = patch.images;
+    if (patch.category !== undefined) payload['category'] = patch.category;
+    if (patch.sizes !== undefined) payload['sizes'] = patch.sizes;
+    if (patch.colors !== undefined) payload['colors'] = patch.colors;
+    if (patch.description !== undefined) payload['description'] = patch.description;
+    if (patch.isNew !== undefined) payload['is_new'] = patch.isNew;
+    if (patch.isFeatured !== undefined) payload['is_featured'] = patch.isFeatured;
+    if (patch.isPromo !== undefined) payload['is_promo'] = patch.isPromo;
 
-    const { error } = await client.from('products').update(payload).eq('id', id);
+    const { error } = await (client.from('products') as any).update(payload).eq('id', id);
     if (error) {
       console.error('Supabase updateProduct error:', error);
       return false;
@@ -191,7 +191,7 @@ export async function deleteProductSupabase(id: string): Promise<boolean> {
   if (!client) return false;
 
   try {
-    const { error } = await client.from('products').delete().eq('id', id);
+    const { error } = await (client.from('products') as any).delete().eq('id', id);
     if (error) {
       console.error('Supabase deleteProduct error:', error);
       return false;
@@ -248,7 +248,7 @@ export async function insertOrderSupabase(order: DashboardOrder): Promise<boolea
   if (!client) return false;
 
   try {
-    const { error } = await client.from('orders').insert([
+    const { error } = await (client.from('orders') as any).insert([
       {
         id: order.id,
         customer_name: order.customer.name,
@@ -280,7 +280,7 @@ export async function updateOrderStatusSupabase(orderId: string, status: Dashboa
   if (!client) return false;
 
   try {
-    const { error } = await client.from('orders').update({ status }).eq('id', orderId);
+    const { error } = await (client.from('orders') as any).update({ status }).eq('id', orderId);
     if (error) {
       console.error('Supabase updateOrderStatus error:', error);
       return false;
@@ -297,7 +297,7 @@ export async function deleteOrderSupabase(orderId: string): Promise<boolean> {
   if (!client) return false;
 
   try {
-    const { error } = await client.from('orders').delete().eq('id', orderId);
+    const { error } = await (client.from('orders') as any).delete().eq('id', orderId);
     if (error) {
       console.error('Supabase deleteOrder error:', error);
       return false;

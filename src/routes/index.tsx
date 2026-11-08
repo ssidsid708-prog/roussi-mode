@@ -45,6 +45,7 @@ function Home() {
   const { products } = useStore();
   const [currentImg, setCurrentImg] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const currentSlide = heroSlides[currentImg] ?? heroSlides[0]!;
 
   useEffect(() => {
     if (isPaused) return;
@@ -96,9 +97,9 @@ function Home() {
         {/* Dynamic content with subtle animation */}
         <div className="hero-content container-store">
           <div className="hero-copy" key={currentImg}>
-            <div className="eyebrow">{heroSlides[currentImg].eyebrow}</div>
-            <h1>{heroSlides[currentImg].title}</h1>
-            <p>{heroSlides[currentImg].desc}</p>
+            <div className="eyebrow">{currentSlide.eyebrow}</div>
+            <h1>{currentSlide.title}</h1>
+            <p>{currentSlide.desc}</p>
             <div className="hero-actions">
               <Button asChild className="h-12 px-7 shadow-lg">
                 <Link to="/products">شري دوكا <ArrowLeft /></Link>
@@ -146,7 +147,7 @@ function Home() {
           <span />
           <small>0{heroSlides.length}</small>
         </div>
-        <span className="hero-season" dir="ltr">{heroSlides[currentImg].tag}</span>
+        <span className="hero-season" dir="ltr">{currentSlide.tag}</span>
       </section>
 
       <Benefits />

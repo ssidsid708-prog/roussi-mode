@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { findProduct, getStoredProducts, saveStoredProducts, type Product } from './products';
+import { findProduct, getStoredProducts, saveStoredProducts, defaultProducts, type Product } from './products';
 import {
   isSupabaseConfigured,
   getSupabase,
